@@ -1,0 +1,62 @@
+# =================================================================
+# GUÍA DE INSTALACIÓN Y PRODUCCIÓN: OLLAMA + AMD ROCM
+# OPTIMIZADO PARA: RYZEN 9 5900X | RX 7600 XT (16GB) | ENDEAVOUR OS
+# =================================================================
+
+1. INSTALACIÓN LIMPIA (STACK ROCM)
+---------------------------------------
+# Instalar el SDK de computación de AMD y el binario de Ollama optimizado
+$ sudo pacman -S rocm-hip-sdk rocm-hip-runtime
+$ yay -S ollama-rocm
+
+2. CONFIGURACIÓN DEL SERVICIO (EL "FIX" NAVI 33)
+-------------------------------------------
+# La 7600 XT requiere forzar la arquitectura 11.0.3 para soporte nativo RDNA 3
+$ sudo systemctl edit ollama
+
+# PEGAR ESTE BLOQUE EXACTO:
+[Service]
+Environment="HSA_OVERRIDE_GFX_VERSION=11.0.3"
+Environment="OLLAMA_NUM_PARALLEL=6"
+Environment="OLLAMA_MAX_LOADED_MODELS=1"
+
+3. PERMISOS Y ARRANQUE
+-----------------------
+$ sudo usermod -aG video,render $USER
+$ sudo usermod -aG video,render ollama
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now ollama
+
+4. EL SCRIPT DE TRADUCCIÓN (LECCIONES DE PRODUCCIÓN)
+---------------------------------------------------
+# Para procesar libros sin que el sistema colapse:
+# 1. TIMEOUT: Mínimo 300s en la petición (requests.post).
+# 2. WORKERS: Máximo 6 hilos concurrentes para no ahogar la VRAM de 16GB.
+# 3. MEMORIA: 32GB RAM permiten acumular el libro en memoria antes de escribir.
+
+# --- Fragmento de código crítico ---
+# response = requests.post(URL, json=payload, timeout=300)
+# with ThreadPoolExecutor(max_workers=6) as executor:
+# ------------------------------------
+
+5. MONITOREO DE "FÁBRICA" (COMANDOS CLAVE)
+----------------------------------------
+# Ver carga real de GPU (Buscar 164W / 97% uso):
+$ watch -n 1 rocm-smi
+
+# Ver logs de éxito en tiempo real:
+$ journalctl -u ollama -f
+
+# Contar progreso (Segmentos terminados de 409):
+$ journalctl -u ollama --since "today" | grep "200" | wc -l
+
+6. SOLUCIÓN DE PROBLEMAS
+------------------------
+- ERROR "Read timed out": La GPU está saturada. Subir timeout a 300s en el script.
+- ERROR "GFX Version": Verificar el override 11.0.3 en el service.
+- SEGMENTOS LENTOS: Es normal en bloques de código o tablas; no interrumpir.
+- PROCESO DETENIDO: Si pulsaste Ctrl+Z, usa 'fg' para reanudar.
+
+# =================================================================
+# ESTADO: LISTO PARA PRODUCCIÓN MASIVA DE DOCUMENTACIÓN TÉCNICA
+# =================================================================
