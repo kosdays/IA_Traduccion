@@ -1,0 +1,41 @@
+# =================================================================
+# GITIGNORE: LABORATORIO DE TRADUCCIÓN (RDNA3 / RYZEN 9)
+# =================================================================
+
+# === Privacidad: NUNCA subir datos personales o libros ===
+Libros/
+input/
+output/
+logs/
+*.pdf
+*.tar.gz
+*.sha256
+pipeline.log
+
+# === Basura de Compilación (XeLaTeX / Pandoc) ===
+# El Ryzen 9 genera estos archivos al renderizar el PDF; no tienen valor en Git
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.xdv
+*.synctex.gz
+
+# === Python (Caché y Entorno) ===
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# === Archivos de Sistema y Editores ===
+*.save
+*.tmp
+*.swp
+.DS_Store
+.directory
+.vscode/
+.idea/
