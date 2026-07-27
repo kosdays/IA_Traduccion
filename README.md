@@ -22,10 +22,10 @@ Orquestador local de alto rendimiento para traducción y maquetación técnica a
 
 ⚡ Ejecución Rápida
     
-    # Preparar permisos:
+    Preparar permisos:
     chmod +x src/*.sh
     
-    # Lanzar Pipeline Maestro:
+    Lanzar Pipeline Maestro:
     ./src/auto_pipeline.sh
 
 🛡️ Privacidad y Seguridad
