@@ -1,5 +1,3 @@
-⚡ Kosdays Translation Pipeline (RDNA 3 / Ryzen 9)
-
 Orquestador local personalizado de alto rendimiento para traducción y maquetación técnica automática en EndeavourOS. 
 
 🛠 Stack Tecnológico & Optimizaciones
